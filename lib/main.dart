@@ -6,13 +6,13 @@ import 'package:troca_book/models/usermodel.dart';
 import 'package:troca_book/telas/Home_page.dart';
 
 
-const String PARSE_APP_ID = 'roZfbV28kg0UeohGwxHks6OiY4jma3OB89Yjt2s9';
+const String PARSE_APP_ID = 'ID';
 
 const String PARSE_APP_URL = 'https://parseapi.back4app.com';
 
-const String MASTER_KEY = 'Ji9EmDwmXWPUUZRSb6uBwpPhMIblvu0PRjs6dRx8';
+const String MASTER_KEY = 'MASTER';
 
-const String LIVE_QUERY_URL = 'trocabook.back4app.io';
+const String LIVE_QUERY_URL = 'URL';
 
 
 
