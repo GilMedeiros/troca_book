@@ -16,7 +16,7 @@ class _MeuAnuncioTileState extends State<MeuAnuncioTile> {
       children: <Widget>[
         GestureDetector(
           onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProdutoPage()));
+            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProdutoPage()));
           },
           child: Container(
             margin: EdgeInsets.only(top: 15,right: 5,left: 5),

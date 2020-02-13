@@ -137,6 +137,7 @@ class UserModel extends Model {
     return null;
   }
 
+  //Logoff do usuário
   void deslogar(context) {
         showDialog(
         context: context,
@@ -205,6 +206,15 @@ class UserModel extends Model {
     notifyListeners();
     }
 
+    //Favoritos do usuário
+    Future<ParseUser> UserFavorites(String objectID) async {
+      var user = usuario..setAdd('Favoritos', objectID);
+      var response = await user.update();
+      if(response.success){
+        notifyListeners();
+      }
+      notifyListeners();
+    }
 
 
 }

@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:troca_book/models/createAnunciomodel.dart';
+import 'package:troca_book/models/handleInfoModel.dart';
 import 'package:troca_book/models/usermodel.dart';
 import 'package:troca_book/telas/Home_page.dart';
 
 
-const String PARSE_APP_ID = 'ID';
+const String PARSE_APP_ID = 'roZfbV28kg0UeohGwxHks6OiY4jma3OB89Yjt2s9';
 
 const String PARSE_APP_URL = 'https://parseapi.back4app.com';
 
-const String MASTER_KEY = 'MASTER';
+const String MASTER_KEY = 'Ji9EmDwmXWPUUZRSb6uBwpPhMIblvu0PRjs6dRx8';
 
-const String LIVE_QUERY_URL = 'URL';
+const String LIVE_QUERY_URL = 'trocabook.back4app.io';
 
 
 
@@ -35,7 +36,10 @@ void main() async {
         child: ScopedModelDescendant<UserModel>(builder: (context,child,model){
           return ScopedModel<AnuncioModel>(
             model: AnuncioModel(model),
-            child: MyApp(),
+            child: ScopedModel<HandleInfo>(
+              model: HandleInfo(model),
+              child: MyApp(),
+            )
           );
         },)
       )

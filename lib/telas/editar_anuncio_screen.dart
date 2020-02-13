@@ -77,6 +77,7 @@ class _CriarAnuncioPageState extends State<EditarAnuncioPage> {
 
 
   //Menu das categorias
+  // ignore: missing_return, non_constant_identifier_names
   Future<QueryBuilder> ListaCat()async{
 
     final QueryBuilder queryBuilder = QueryBuilder<ParseObject>(ParseObject('categoriaDoItem'))..orderByAscending("categoria");

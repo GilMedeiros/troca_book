@@ -1,12 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:troca_book/telas/Produto_page.dart';
 
 class AnuncioTile extends StatelessWidget {
+
+  final snaptshot;
+  AnuncioTile(this.snaptshot);
+
+//  Future images() async {
+//    var img = snaptshot['images'];
+//    var jsoni = json.decode(img.toString());
+//    print(jsoni[0]['url']);
+//  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProdutoPage()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProdutoPage(snaptshot)));
       },
       child: Container(
         margin: EdgeInsets.only(top: 15,right: 5,left: 5),
@@ -25,7 +37,7 @@ class AnuncioTile extends StatelessWidget {
               aspectRatio: 1/1,
               child: Container(
                 decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4),topLeft: Radius.circular(4)),
-                image: DecorationImage(image: NetworkImage('https://1.bp.blogspot.com/-FzTH3PVFUYM/WwbX-P89w6I/AAAAAAAALhU/1Gar07_XnmgmGIBMY9L_R6fmPFfGRtWkACLcBGAs/s1600/jordanpeterson-750.jpg',),fit: BoxFit.cover)),
+                image: DecorationImage(image: NetworkImage(json.decode(snaptshot['images'].toString())[0]['url']),fit: BoxFit.cover)),
               ),
             ),
             Expanded(
@@ -38,13 +50,13 @@ class AnuncioTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
 
-                    Text("12 regras para a vidas",overflow: TextOverflow.ellipsis,
+                    Text(snaptshot['Titulo'],overflow: TextOverflow.ellipsis,
                       maxLines: 2,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
                     ),
-                    Text("Autor: Jordan Peterson",style: TextStyle(fontStyle: FontStyle.italic),maxLines: 1,overflow: TextOverflow.ellipsis,),
-                    RichText(text: TextSpan(text: 'Aceita trocar:',style: TextStyle(color: Colors.black),children: [TextSpan(text: ' Sim',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold))]),),
-                    Text("R\$ 50",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,),
-                    Text("Estado: Bem conservado"),
+                    Text("Autor: ${snaptshot['Autor']}",style: TextStyle(fontStyle: FontStyle.italic),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                    RichText(text: TextSpan(text: 'Aceita trocar:',style: TextStyle(color: Colors.black),children: [TextSpan(text: ' ${snaptshot['Troca'] == 1 ? 'Não': 'Sim'}',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold))]),),
+                    Text("R\$ ${snaptshot['Preco']}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                    Text("Estado: ${snaptshot['Condicao']}"),
                     Text("Barra da Tijuca, 10 de Janeiro 18:09",style: TextStyle(color: Colors.grey,fontSize: 12),maxLines: 1,overflow: TextOverflow.ellipsis,)
                   ],
                 ),

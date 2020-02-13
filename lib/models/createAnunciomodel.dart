@@ -1,6 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -17,6 +16,12 @@ class AnuncioModel extends Model{
 
     UserModel user;
 
+
+  @override
+  void addListener(VoidCallback listener) {
+    super.addListener(listener);
+  }
+
   Future<ParseObject> CriarAnuncio(
       String Titulo,
       int Trocar,
@@ -27,22 +32,51 @@ class AnuncioModel extends Model{
       String descicao,
       String preco,
       VoidCallback funcao,
-      List<ParseFile> imagem
+      List<File> imgList,
       ) async {
-
-      var Anuncio = ParseObject('Anuncios')..set('ID', user.usuario.objectId)
+      List<ParseFile> imagem = List<ParseFile>();
+      for (final img in imgList){
+        imagem.add(ParseFile(img,name: 'IMAGEM'));
+      }
+      var Anuncio = ParseObject('Anuncios')..set('UserID', user.usuario.objectId)
         ..set('Titulo', Titulo)..set('Troca', Trocar)
         ..set('Preco', preco)..set('Categoria', Categoria)
         ..set('Condicao', Condicao)..set('Autor', autor)
         ..set('MostraTelefone', mostrartelefone)
-        ..set('Descricao', descicao)
-        ..set<List<ParseFile>>('Images', imagem);
+        ..set('Descricao', descicao)..setAddAll('images', imagem)..set('Anunciante', user.usuario['Nome'])..set('Telefone', user.usuario['Celular']);
+
       var response = await Anuncio.save();
       if(response.success){
         funcao();
-        response.results.first;
       }
 
   }
+//  Future<int> getLengthAnuncios() async{
+//    QueryBuilder<ParseObject> queryBuilder =
+//    QueryBuilder<ParseObject>(ParseObject('Anuncios'));
+//    var response = await queryBuilder.count();
+//    if(response.success && response.result != null){
+//      int count = response.count;
+//      countF = count;
+//      print(count);
+//      notifyListeners();
+//
+//    }
+//    notifyListeners();
+//  }
+  
+//  Future<QueryBuilder> ListaAnuncios() async{
+//    final QueryBuilder queryBuilder = QueryBuilder<ParseObject>(ParseObject('Anuncios'))..orderByAscending('createdAt');
+//    final ParseResponse parseResponse = await queryBuilder.query();
+//    if(parseResponse.success && parseResponse.result != null){
+//      int countAnuncio = parseResponse.count;
+//      countF == countAnuncio;
+//      print(countAnuncio);
+//      notifyListeners();
+//    }
+//    notifyListeners();
+//
+//  }
+
 
 }

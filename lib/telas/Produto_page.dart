@@ -1,8 +1,48 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:troca_book/models/usermodel.dart';
+import 'dart:convert';
 
-class ProdutoPage extends StatelessWidget {
+class ProdutoPage extends StatefulWidget {
+
+  final snapshot;
+  ProdutoPage(this.snapshot);
+
+  @override
+  _ProdutoPageState createState() => _ProdutoPageState();
+}
+
+class _ProdutoPageState extends State<ProdutoPage> {
+
+
+  Future<ParseResponse> getinfoFromUser() async{
+    var response = await ParseObject('_User').getObject(widget.snapshot['UserID']);
+    setState(() {
+      telefone = response.result['Celular'];
+    });
+    return response;
+  }
+
+  String telefone = " ";
+
+  Future images() async {
+    var img = widget.snapshot['images'];
+    var jsoni = json.decode(img.toString());
+    for (var imgs in jsoni) {
+      couserlImg.add(imgs['url']);
+    }
+  }
+  List couserlImg = List();
+  @override
+  void initState() {
+    images();
+    getinfoFromUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +52,9 @@ class ProdutoPage extends StatelessWidget {
       ),
       appBar: AppBar(
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.favorite_border), onPressed: (){}),
+          IconButton(icon: Icon(Icons.favorite_border), onPressed: (){
+            UserModel.of(context).UserFavorites('j');
+          }),
         ],
       ),
       body: GestureDetector(
@@ -32,8 +74,7 @@ class ProdutoPage extends StatelessWidget {
                 aspectRatio: 1.1,
                 child: Carousel(
                   boxFit: BoxFit.contain,
-                  images: List<String>(2).map((url){
-                    url = 'https://1.bp.blogspot.com/-FzTH3PVFUYM/WwbX-P89w6I/AAAAAAAALhU/1Gar07_XnmgmGIBMY9L_R6fmPFfGRtWkACLcBGAs/s1600/jordanpeterson-750.jpg';
+                  images: couserlImg.map((url){
                     return NetworkImage(url);
                   }).toList(),
                   dotSize: 5.0,
@@ -49,21 +90,21 @@ class ProdutoPage extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.all(15),
-                child: Text("12 Regras para a vida",style: TextStyle(fontSize: 24,fontWeight: FontWeight.w300),),
+                child: Text(widget.snapshot['Titulo'],style: TextStyle(fontSize: 24,fontWeight: FontWeight.w300),),
               ),
             ),
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.only(left: 15,right: 15,bottom: 5),
-                child: Text("R\$ 50",style: TextStyle(fontSize: 22,color: Colors.black),),
+                child: Text("R\$ ${widget.snapshot['Preco']}",style: TextStyle(fontSize: 22,color: Colors.black),),
               ),
             ),
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.only(left: 15,right: 15,bottom: 5),
-                child: Text("Aceita troca: Não",style: TextStyle(fontSize: 18,color: Colors.black),),
+                child: Text("Aceita troca: ${widget.snapshot['Troca'] == 1 ? 'Não': 'Sim'}",style: TextStyle(fontSize: 18,color: Colors.black),),
               ),
             ),
             Divider(thickness: 0.7,),
@@ -78,7 +119,7 @@ class ProdutoPage extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.only(left: 15,right: 15,bottom: 15),
-                child: Text("Máximo de 420 caracteres",style: TextStyle(fontSize: 17,color: Colors.black),maxLines: 10,),
+                child: Text(widget.snapshot['Descricao'],style: TextStyle(fontSize: 17,color: Colors.black),maxLines: 10,),
               ),
             ),
             Divider(thickness: 0.8),
@@ -96,12 +137,12 @@ class ProdutoPage extends StatelessWidget {
                 children: <Widget>[
                   Center(child: Text('Contato',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)),
                   Divider(thickness: 0.8,),
-                  Text("Anunciante: Gil",style: TextStyle(fontWeight: FontWeight.w300),),
+                  Text("Anunciante: ${widget.snapshot['Anunciante']}",style: TextStyle(fontWeight: FontWeight.w300),),
                   SizedBox(height: 5,),
                   Row(
                     children: <Widget>[
                       Text('Telefone: ',style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black)),
-                      InkWell(child: Text("(21) 98333-0400",style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline)),)
+                      InkWell(child: Text(widget.snapshot['MostraTelefone'] == true ?  telefone: 'O usuário resolveu não mostrar o telefone',style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline)),)
                     ],
                   ),
                   SizedBox(height: 15,),
@@ -109,7 +150,9 @@ class ProdutoPage extends StatelessWidget {
                     height: 45,
                     width: MediaQuery.of(context).size.width,
                     child: RaisedButton(
-                      onPressed: (){},
+                      onPressed: (){
+
+                      },
                       elevation: 0.0,
 
                       shape: new RoundedRectangleBorder(
@@ -122,8 +165,8 @@ class ProdutoPage extends StatelessWidget {
                   SizedBox(height: 05,),
                   Divider(thickness: 0.8,),
                   InkWell(
-                      child: Text("Ver outros anúncios deste usuário",style: TextStyle(fontWeight: FontWeight.bold),
-                  ),onTap: (){},),
+                    child: Text("Ver outros anúncios deste usuário",style: TextStyle(fontWeight: FontWeight.bold),
+                    ),onTap: (){},),
 
                 ],
               ),
