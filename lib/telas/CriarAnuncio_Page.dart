@@ -7,6 +7,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:troca_book/Tiles/Images_criar_anuncio_tile.dart';
 import 'package:troca_book/models/createAnunciomodel.dart';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:troca_book/models/usermodel.dart';
 import 'package:troca_book/telas/Home_page.dart';
 
 
@@ -53,6 +54,7 @@ class _CriarAnuncioPageState extends State<CriarAnuncioPage> {
   final descricaocontroller = TextEditingController();
   final autorcontroller =  TextEditingController();
   final FormStateKey = GlobalKey<FormState>();
+  final cepcontroller = TextEditingController();
 
 
   //Função das imagens
@@ -144,12 +146,6 @@ class _CriarAnuncioPageState extends State<CriarAnuncioPage> {
         )) ?? false;
   }
 
-
-    @override
-    void dispose() {
-      super.dispose();
-    }
-
     @override
   Widget build(BuildContext context) {
 
@@ -224,26 +220,31 @@ class _CriarAnuncioPageState extends State<CriarAnuncioPage> {
                     color: Colors.white,
                     child: AspectRatio(
                         aspectRatio: 2.3,
-                        child: ListView.builder(
-                            itemCount: _ListaDeImagens.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context,index){
-                              return GestureDetector(
-                                child: ImagesAnunTile(_ListaDeImagens[index]),
-                                onTap: (){
-                                  setState(() {
-                                    _ListaDeImagens.removeAt(index);
+                        child: Stack(
+                          children: <Widget>[
+                            if(_ListaDeImagens.length == 0)
+                              Center(child: Icon(Icons.camera_enhance ,size: 60,)),
 
-                                  });
+                            ListView.builder(
+                              itemCount: _ListaDeImagens.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context,index){
+                                return GestureDetector(
+                                  child: ImagesAnunTile(_ListaDeImagens[index]),
+                                  onTap: (){
+                                    setState(() {
+                                      _ListaDeImagens.removeAt(index);
 
-                                },
-                              );
-                            }
+                                    });
+
+                                  },
+                                );
+                              }
+                          ),],
                         )
                     )
                 ),
                 InkWell(
-
                   onTap: (){
                     if(_ListaDeImagens.length >= 5){
                       (){};
@@ -274,8 +275,9 @@ class _CriarAnuncioPageState extends State<CriarAnuncioPage> {
                   ),
                   child: Center(
                     child: TextFormField(
+                      autovalidate: true,
                       validator: (text){
-                        if(text.isEmpty){
+                        if(text.isEmpty || text.startsWith(" ")){
                           return 'Insira um título';
                         }
                       },
@@ -490,6 +492,31 @@ class _CriarAnuncioPageState extends State<CriarAnuncioPage> {
                       )
                   ),
                 ),
+//                Container(
+//                  margin: EdgeInsets.only(left: 15,right: 15,bottom: 15),
+//                  height: 60,
+//                  decoration: BoxDecoration(
+//                      color: Colors.grey[300],
+//                      borderRadius: BorderRadius.all(Radius.circular(15))
+//                  ),
+//                  child: Center(
+//                    child: TextFormField(
+//                      validator: (text){
+//                        if(text.isEmpty){
+//                          return 'Digite seu CEP';
+//                        }
+//                      },
+//                      maxLength: 65,
+//                      controller: tituloController,
+//                      decoration: InputDecoration(
+//                        counterText: '',
+//                        border: InputBorder.none,
+//                        contentPadding: EdgeInsets.all(15),
+//                        hintText: 'CEP*',
+//                      ),
+//                    ),
+//                  ),
+//                ),
                 Container(
                   margin: EdgeInsets.only(left: 15,right: 15,bottom: 15, top: 15),
                   width: MediaQuery.of(context).size.width,
@@ -520,7 +547,7 @@ class _CriarAnuncioPageState extends State<CriarAnuncioPage> {
                         setState(() {
                           isLoading = true;
                         });
-                        AnuncioModel.of(context).CriarAnuncio(tituloController.text, _radiovalue, padrao, padraozada, autorcontroller.text, switchtelefone, descricaocontroller.text,precocontroller.text,sucesso,_ListaDeImagens);
+                        AnuncioModel.of(context).CriarAnuncio(tituloController.text, _radiovalue, padrao, padraozada, autorcontroller.text, switchtelefone, descricaocontroller.text,precocontroller.text,cepcontroller.text,sucesso,_ListaDeImagens);
                       }
                       if(padrao == 'Categoria' || padraozada == 'Condição do item'){
                         setState(() {

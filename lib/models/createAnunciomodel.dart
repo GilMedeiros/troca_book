@@ -31,6 +31,7 @@ class AnuncioModel extends Model{
       bool mostrartelefone,
       String descicao,
       String preco,
+      String cep,
       VoidCallback funcao,
       List<File> imgList,
       ) async {
@@ -43,10 +44,12 @@ class AnuncioModel extends Model{
         ..set('Preco', preco)..set('Categoria', Categoria)
         ..set('Condicao', Condicao)..set('Autor', autor)
         ..set('MostraTelefone', mostrartelefone)
-        ..set('Descricao', descicao)..setAddAll('images', imagem)..set('Anunciante', user.usuario['Nome'])..set('Telefone', user.usuario['Celular']);
+        ..set('Descricao', descicao)..setAddAll('images', imagem)..set('Anunciante', user.usuario['Nome'])..set('Telefone', user.usuario['Celular'])..set('cep',user.usuario['CEP']);
 
       var response = await Anuncio.save();
       if(response.success){
+        var usersave = user.usuario..setAdd('Anuncios', response.result['objectId']);
+        await usersave.update();
         funcao();
       }
 

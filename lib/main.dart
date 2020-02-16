@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:troca_book/models/createAnunciomodel.dart';
-import 'package:troca_book/models/handleInfoModel.dart';
 import 'package:troca_book/models/usermodel.dart';
 import 'package:troca_book/telas/Home_page.dart';
 
@@ -36,10 +35,7 @@ void main() async {
         child: ScopedModelDescendant<UserModel>(builder: (context,child,model){
           return ScopedModel<AnuncioModel>(
             model: AnuncioModel(model),
-            child: ScopedModel<HandleInfo>(
-              model: HandleInfo(model),
-              child: MyApp(),
-            )
+            child:MyApp(),
           );
         },)
       )

@@ -27,7 +27,7 @@ class _Home_TabState extends State<Home_Tab> {
           future: ListaAnuncios(),
           builder: (context, snapshot) {
             if(!snapshot.hasData){
-              return Center(child: Text('Não existem anuncios'));
+              return Center(child: CircularProgressIndicator());
             } else
             return Stack(
               children: <Widget>[

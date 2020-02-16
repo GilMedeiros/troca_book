@@ -1,22 +1,35 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:troca_book/models/usermodel.dart';
 import 'package:troca_book/telas/Produto_page.dart';
 import 'package:troca_book/telas/editar_anuncio_screen.dart';
 
 class MeuAnuncioTile extends StatefulWidget {
+
+  final snapshot;
+  MeuAnuncioTile(this.snapshot);
+
   @override
-  _MeuAnuncioTileState createState() => _MeuAnuncioTileState();
+  _MeuAnuncioTileState createState() => _MeuAnuncioTileState(snapshot);
 }
 
 
 class _MeuAnuncioTileState extends State<MeuAnuncioTile> {
 
+  final snapshot;
+
+  _MeuAnuncioTileState(this.snapshot);
+
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: <Widget>[
         GestureDetector(
           onTap: (){
-            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProdutoPage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProdutoPage(snapshot)));
           },
           child: Container(
             margin: EdgeInsets.only(top: 15,right: 5,left: 5),
@@ -35,8 +48,7 @@ class _MeuAnuncioTileState extends State<MeuAnuncioTile> {
                   aspectRatio: 1/1,
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4),topLeft: Radius.circular(4)),
-                        image: DecorationImage(image: NetworkImage('https://1.bp.blogspot.com/-FzTH3PVFUYM/WwbX-P89w6I/AAAAAAAALhU/1Gar07_XnmgmGIBMY9L_R6fmPFfGRtWkACLcBGAs/s1600/jordanpeterson-750.jpg',),fit: BoxFit.cover)),
-                  ),
+                        image: DecorationImage(image: NetworkImage(json.decode(snapshot['images'].toString())[0]['url']),fit: BoxFit.cover)),),
                 ),
                 Expanded(
                   child: Container(
@@ -48,13 +60,13 @@ class _MeuAnuncioTileState extends State<MeuAnuncioTile> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
 
-                        Text("12 regras para a vidas",overflow: TextOverflow.ellipsis,
+                        Text(snapshot['Titulo'],overflow: TextOverflow.ellipsis,
                           maxLines: 2,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
                         ),
-                        Text("Autor: Jordan Peterson",style: TextStyle(fontStyle: FontStyle.italic),maxLines: 1,overflow: TextOverflow.ellipsis,),
-                        RichText(text: TextSpan(text: 'Aceita trocar:',style: TextStyle(color: Colors.black),children: [TextSpan(text: ' Sim',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold))]),),
-                        Text("R\$ 50",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,),
-                        Text("Estado: Bem conservado"),
+                        Text("Autor: ${snapshot['Autor']}",style: TextStyle(fontStyle: FontStyle.italic),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                        RichText(text: TextSpan(text: 'Aceita trocar:',style: TextStyle(color: Colors.black),children: [TextSpan(text: ' ${snapshot['Troca'] == 1 ? 'Não': 'Sim'}',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold))]),),
+                        Text("R\$ ${snapshot['Preco']}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                        Text("Estado: ${snapshot['Condicao']}"),
                         Text("Barra da Tijuca, 10 de Janeiro 18:09",style: TextStyle(color: Colors.grey,fontSize: 12),maxLines: 1,overflow: TextOverflow.ellipsis,)
                       ],
                     ),
@@ -113,7 +125,16 @@ class _MeuAnuncioTileState extends State<MeuAnuncioTile> {
                                 actions: <Widget>[
                                   FlatButton(
                                     textColor: Colors.black,
-                                    onPressed: (){},
+                                    onPressed: ()async{
+                                      ParseObject('Anuncios').delete(id: snapshot['objectId']);
+                                      var usersave = UserModel.of(context).usuario..setRemove("Anuncios", snapshot['objectId']);
+                                      await usersave.update();
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      setState(() {
+                                        MeuAnuncioTile(null);
+                                      });
+                                    },
                                     child: Text('Excluir anúncio'),
                                   ),
                                   FlatButton(

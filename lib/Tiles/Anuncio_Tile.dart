@@ -8,12 +8,6 @@ class AnuncioTile extends StatelessWidget {
   final snaptshot;
   AnuncioTile(this.snaptshot);
 
-//  Future images() async {
-//    var img = snaptshot['images'];
-//    var jsoni = json.decode(img.toString());
-//    print(jsoni[0]['url']);
-//  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

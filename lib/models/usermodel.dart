@@ -118,7 +118,7 @@ class UserModel extends Model {
     @required String nome,
     @required VoidCallback funcao,
   }) async{
-    var user = ParseUser(username,pass,email)..set("Nome", nome,)..set("CEP", cep)..set("Celular", celular);
+    var user = ParseUser(username,pass,email)..set("Nome", nome,)..set("CEP", cep)..set("Celular", celular)..setAdd('Anuncios', '');
     var result = await user.create();
     if(result.success){
       usuario = user;
