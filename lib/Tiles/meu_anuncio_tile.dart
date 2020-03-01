@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:troca_book/models/usermodel.dart';
 import 'package:troca_book/telas/Produto_page.dart';
+import 'package:troca_book/telas/confirma_excluir.dart';
 import 'package:troca_book/telas/editar_anuncio_screen.dart';
 
 class MeuAnuncioTile extends StatefulWidget {
@@ -109,60 +110,8 @@ class _MeuAnuncioTileState extends State<MeuAnuncioTile> {
               ),
               FlatButton(
                 onPressed: (){
-                  showDialog(
-                      context: (context),
-                    child: AlertDialog(
-                      title: Text('Tem certeza ?'),
-                      content: Text("Deseja excluir o anúncio? Não é possível desfazer"),
-
-                      actions: <Widget>[
-                        FlatButton(
-                          onPressed: (){
-                            showDialog(
-                                context: (context),
-                              child: AlertDialog(
-                                content: Text("Tem mesmo certeza ??",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    textColor: Colors.black,
-                                    onPressed: ()async{
-                                      ParseObject('Anuncios').delete(id: snapshot['objectId']);
-                                      var usersave = UserModel.of(context).usuario..setRemove("Anuncios", snapshot['objectId']);
-                                      await usersave.update();
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                      setState(() {
-                                        MeuAnuncioTile(null);
-                                      });
-                                    },
-                                    child: Text('Excluir anúncio'),
-                                  ),
-                                  FlatButton(
-                                    textColor: Colors.black,
-                                    onPressed: (){
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Cancelar"),
-                                  )
-                                ],
-                                backgroundColor: Colors.redAccent,
-                              )
-                            );
-                          },
-                          child: Text("Excluir"),
-
-                        ),
-                        FlatButton(
-                          child: Text('Cancelar'),
-                          onPressed: (){
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    )
-                  );
-                },
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ConfirmaExcluirPage(snapshot)));
+                  },
                 textColor: Colors.white,
                 child: Row(
                   children: <Widget>[

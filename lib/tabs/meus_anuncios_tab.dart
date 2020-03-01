@@ -35,20 +35,18 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
       future: getinfoFromUser(),
       builder: (context, snapshot) {
         if(snapshot.hasData){
           if(snapshot.data.length == 0){
             return Center(child: Text("Você ainda não tem nenhum anúncio publicado"),);
-
           }
           return Center(child: CircularProgressIndicator(),);
         }
 
           return ListView.builder(
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data.length = null ? 0 : snapshot.data.length,
               itemBuilder: (context,index){
                 return MeuAnuncioTile(snapshot.data[index]);
               }

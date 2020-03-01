@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:troca_book/tabs/Home_tab.dart';
+import 'package:troca_book/tabs/favoritos_tab.dart';
 import 'package:troca_book/tabs/minha_conta_tab.dart';
 import 'package:troca_book/telas/CriarAnuncio_Page.dart';
 import 'package:troca_book/tabs/meus_anuncios_tab.dart';
@@ -40,8 +41,9 @@ class Home_Page extends StatelessWidget {
         Scaffold(
           drawer: CustomDrawer(_pagecontroller),
           appBar: AppBar(
-            title: Text('Página 1'),
+            title: Text('Favoritos'),
           ),
+          body: FavoritosTab(),
         ),
 
         //Meus Anuncios - 2

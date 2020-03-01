@@ -7,7 +7,6 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:troca_book/Tiles/Images_criar_anuncio_tile.dart';
 import 'package:troca_book/models/createAnunciomodel.dart';
 import 'package:brasil_fields/brasil_fields.dart';
-import 'package:troca_book/models/usermodel.dart';
 import 'package:troca_book/telas/Home_page.dart';
 
 
@@ -543,7 +542,7 @@ class _CriarAnuncioPageState extends State<CriarAnuncioPage> {
                   height: 60,
                   child: RaisedButton(
                     onPressed: (){
-                      if(FormStateKey.currentState.validate() && padrao != 'Categoria' && padraozada != 'Condição do item'){
+                      if(FormStateKey.currentState.validate() && padrao != 'Categoria' && padraozada != 'Condição do item' && _ListaDeImagens.length >= 1){
                         setState(() {
                           isLoading = true;
                         });
